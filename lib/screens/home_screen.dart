@@ -78,6 +78,12 @@ OutlinedButton.icon(
   label: const Text('Ver favoritos'),
 ),
 
+const SizedBox(height: 12),
+OutlinedButton.icon(
+  onPressed: () => Get.toNamed('/resenas'),
+  icon: const Icon(Icons.rate_review),
+  label: const Text('Mis reseñas'),
+),
 
                 ],
               ),

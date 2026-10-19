@@ -37,3 +37,21 @@ class LibroRespuesta(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+
+class ResenaCrear(BaseModel):
+    libro_id: int
+    comentario: str = Field(min_length=3, max_length=500)
+    calificacion: int = Field(ge=1, le=5)
+
+
+class ResenaRespuesta(BaseModel):
+    id: int
+    usuario_id: int
+    libro_id: int
+    comentario: str
+    calificacion: int
+
+    class Config:
+        from_attributes = True

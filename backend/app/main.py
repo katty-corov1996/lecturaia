@@ -4,9 +4,21 @@ from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
 from .database import Base, engine, obtener_db
-from .models import Libro, Usuario
+
+from .models import Libro, Resena, Usuario
 from .schemas import (
     LibroRespuesta,
+    TokenRespuesta,
+    UsuarioLogin,
+    UsuarioRegistro,
+    UsuarioRespuesta,
+)
+
+
+from .schemas import (
+    LibroRespuesta,
+    ResenaCrear,
+    ResenaRespuesta,
     TokenRespuesta,
     UsuarioLogin,
     UsuarioRegistro,
@@ -312,3 +324,85 @@ def listar_libros(
     db: Session = Depends(obtener_db),
 ):
     return db.query(Libro).order_by(Libro.titulo).all()
+
+
+@app.post(
+    "/resenas",
+    response_model=ResenaRespuesta,
+    status_code=status.HTTP_201_CREATED,
+)
+def crear_resena(
+    datos: ResenaCrear,
+    usuario: Usuario = Depends(obtener_usuario_actual),
+    db: Session = Depends(obtener_db),
+):
+    libro = (
+        db.query(Libro)
+        .filter(Libro.id == datos.libro_id)
+        .first()
+    )
+
+    if libro is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Libro no encontrado.",
+        )
+
+    resena = Resena(
+        usuario_id=usuario.id,
+        libro_id=datos.libro_id,
+        comentario=datos.comentario.strip(),
+        calificacion=datos.calificacion,
+    )
+
+    db.add(resena)
+    db.commit()
+    db.refresh(resena)
+
+    return resena
+
+
+@app.get(
+    "/resenas/mias",
+    response_model=list[ResenaRespuesta],
+)
+def listar_mis_resenas(
+    usuario: Usuario = Depends(obtener_usuario_actual),
+    db: Session = Depends(obtener_db),
+):
+    return (
+        db.query(Resena)
+        .filter(Resena.usuario_id == usuario.id)
+        .order_by(Resena.id.desc())
+        .all()
+    )
+
+
+@app.delete(
+    "/resenas/{resena_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def eliminar_resena(
+    resena_id: int,
+    usuario: Usuario = Depends(obtener_usuario_actual),
+    db: Session = Depends(obtener_db),
+):
+    resena = (
+        db.query(Resena)
+        .filter(
+            Resena.id == resena_id,
+            Resena.usuario_id == usuario.id,
+        )
+        .first()
+    )
+
+    if resena is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Reseña no encontrada.",
+        )
+
+    db.delete(resena)
+    db.commit()
+
+    return None

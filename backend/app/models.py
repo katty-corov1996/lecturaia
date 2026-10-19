@@ -21,3 +21,15 @@ class Libro(Base):
     genero = Column(String, nullable=False)
     descripcion = Column(String, nullable=False)
     anio = Column(Integer, nullable=False)
+
+
+
+class Resena(Base):
+    __tablename__ = "resenas"
+
+    id = Column(Integer, primary_key=True, index=True)
+    usuario_id = Column(Integer, nullable=False, index=True)
+    libro_id = Column(Integer, nullable=False, index=True)
+    comentario = Column(String, nullable=False)
+    calificacion = Column(Integer, nullable=False)
+

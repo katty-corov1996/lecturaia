@@ -10,6 +10,8 @@ import 'screens/libros_screen.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'controllers/favoritos_controller.dart';
 import 'screens/favoritos_screen.dart';
+import 'controllers/resenas_controller.dart';
+import 'screens/resenas_screen.dart';
 
 
 Future<void> main() async {
@@ -19,6 +21,8 @@ Future<void> main() async {
   Get.put(AuthController());
   Get.put(LibrosController());
 Get.put(FavoritosController());
+Get.put(ResenasController());
+
 
   runApp(const LecturaIaApp());
 }
@@ -55,6 +59,12 @@ GetPage(
   name: '/favoritos',
   page: () => const FavoritosScreen(),
 ),
+
+GetPage(
+  name: '/resenas',
+  page: () => const ResenasScreen(),
+),
+
       ],
       home: Obx(
         () {
