@@ -1,3 +1,8 @@
+import os
+import httpx
+import asyncio
+
+
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
@@ -406,3 +411,110 @@ def eliminar_resena(
     db.commit()
 
     return None
+
+
+@app.post("/ia/recomendar")
+async def recomendar_lectura(
+    preferencias: dict,
+    usuario: Usuario = Depends(obtener_usuario_actual),
+):
+    api_key = os.getenv("GEMINI_API_KEY")
+
+    if not api_key:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="La clave de Gemini no está configurada.",
+        )
+
+    gustos = preferencias.get("preferencias", "").strip()
+
+    if not gustos:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Debes indicar tus preferencias de lectura.",
+        )
+
+    prompt = (
+        "Eres un asistente de recomendación de libros. "
+        "Recomienda 3 libros adecuados para el usuario según sus preferencias. "
+        "Para cada libro indica título, autor y una breve razón de recomendación. "
+        "Responde en español y de forma clara.\n\n"
+        f"Preferencias del usuario: {gustos}"
+    )
+
+    url = (
+        "https://generativelanguage.googleapis.com/"
+f"v1beta/models/gemini-3.8-flash:generateContent?key={api_key}"
+    )
+
+    payload = {
+        "contents": [
+            {
+                "parts": [
+                    {
+                        "text": prompt,
+                    }
+                ]
+            }
+        ]
+    }
+
+    try:
+
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            response = None
+
+            for intento in range(3):
+                response = await client.post(
+                    url,
+                    json=payload,
+                )
+
+                if response.status_code != 503:
+                    break
+
+                if intento < 2:
+                    await asyncio.sleep(2)
+
+        if response.status_code == 503:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail=(
+                    "El servicio de inteligencia artificial "
+                    "está temporalmente saturado. "
+                    "Intenta nuevamente en unos momentos."
+                ),
+            )
+
+
+        if response.status_code != 200:
+            print(
+                "ERROR GEMINI:",
+                response.status_code,
+                response.text,
+            )
+
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail=(
+                    "No fue posible obtener una respuesta "
+                    "del servicio de IA."
+                ),
+            )
+
+
+        data = response.json()
+
+        texto = (
+            data["candidates"][0]["content"]["parts"][0]["text"]
+        )
+
+        return {
+            "recomendacion": texto,
+        }
+
+    except httpx.RequestError:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="No se pudo conectar con el servicio de IA.",
+        )

@@ -13,7 +13,8 @@ import 'screens/favoritos_screen.dart';
 import 'controllers/resenas_controller.dart';
 import 'screens/resenas_screen.dart';
 import 'screens/registro_screen.dart';
-
+import 'controllers/ia_controller.dart';
+import 'screens/ia_screen.dart';
 
 
 Future<void> main() async {
@@ -24,6 +25,7 @@ Future<void> main() async {
   Get.put(LibrosController());
 Get.put(FavoritosController());
 Get.put(ResenasController());
+Get.put(IaController());
 
 
   runApp(const LecturaIaApp());
@@ -70,6 +72,11 @@ GetPage(
 GetPage(
   name: '/registro',
   page: () => const RegistroScreen(),
+),
+
+GetPage(
+  name: '/ia',
+  page: () => const IaScreen(),
 ),
 
       ],

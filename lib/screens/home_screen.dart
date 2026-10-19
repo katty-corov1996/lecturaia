@@ -34,11 +34,11 @@ class HomeScreen extends StatelessWidget {
             );
           }
 
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Center(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   const Icon(
                     Icons.menu_book_rounded,
@@ -63,32 +63,36 @@ class HomeScreen extends StatelessWidget {
                     'Tu biblioteca inteligente está lista para comenzar.',
                     textAlign: TextAlign.center,
                   ),
-
-const SizedBox(height: 24),
-FilledButton.icon(
-  onPressed: () => Get.toNamed('/libros'),
-  icon: const Icon(Icons.library_books),
-  label: const Text('Ver biblioteca'),
-),
-
-const SizedBox(height: 12),
-OutlinedButton.icon(
-  onPressed: () => Get.toNamed('/favoritos'),
-  icon: const Icon(Icons.favorite),
-  label: const Text('Ver favoritos'),
-),
-
-const SizedBox(height: 12),
-OutlinedButton.icon(
-  onPressed: () => Get.toNamed('/resenas'),
-  icon: const Icon(Icons.rate_review),
-  label: const Text('Mis reseñas'),
-),
-
+                  const SizedBox(height: 24),
+                  FilledButton.icon(
+                    onPressed: () => Get.toNamed('/libros'),
+                    icon: const Icon(Icons.library_books),
+                    label: const Text('Ver biblioteca'),
+                  ),
+                  const SizedBox(height: 12),
+                  OutlinedButton.icon(
+                    onPressed: () => Get.toNamed('/favoritos'),
+                    icon: const Icon(Icons.favorite),
+                    label: const Text('Ver favoritos'),
+                  ),
+                  const SizedBox(height: 12),
+                  OutlinedButton.icon(
+                    onPressed: () => Get.toNamed('/resenas'),
+                    icon: const Icon(Icons.rate_review),
+                    label: const Text('Mis reseñas'),
+                  ),
+                  const SizedBox(height: 12),
+                  FilledButton.icon(
+                    onPressed: () => Get.toNamed('/ia'),
+                    icon: const Icon(Icons.auto_awesome),
+                    label: const Text('Recomendación con IA'),
+                  ),
                 ],
               ),
             ),
           );
+
+
         },
       ),
     );
