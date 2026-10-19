@@ -50,6 +50,9 @@ Get.offAllNamed('/home');
 }
 
 
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -131,6 +134,11 @@ Obx(
   ),
 ),
 
+const SizedBox(height: 12),
+TextButton(
+  onPressed: () => Get.toNamed('/registro'),
+  child: const Text('Crear una cuenta'),
+),
 
 
                 ],

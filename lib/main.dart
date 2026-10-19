@@ -12,6 +12,8 @@ import 'controllers/favoritos_controller.dart';
 import 'screens/favoritos_screen.dart';
 import 'controllers/resenas_controller.dart';
 import 'screens/resenas_screen.dart';
+import 'screens/registro_screen.dart';
+
 
 
 Future<void> main() async {
@@ -63,6 +65,11 @@ GetPage(
 GetPage(
   name: '/resenas',
   page: () => const ResenasScreen(),
+),
+
+GetPage(
+  name: '/registro',
+  page: () => const RegistroScreen(),
 ),
 
       ],
