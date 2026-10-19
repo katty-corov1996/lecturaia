@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../controllers/auth_controller.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,6 +13,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _correoController = TextEditingController();
   final _claveController = TextEditingController();
+final AuthController _auth = Get.find<AuthController>();
 
   @override
   void dispose() {
@@ -20,15 +22,33 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _iniciarSesion() {
-    if (!_formKey.currentState!.validate()) return;
+Future<void> _iniciarSesion() async {
+  if (!_formKey.currentState!.validate()) return;
+
+  final correcto = await _auth.iniciarSesion(
+    email: _correoController.text,
+    password: _claveController.text,
+  );
+
+  if (!mounted) return;
+
+  if (correcto) {
+Get.offAllNamed('/home');
 
     Get.snackbar(
       'LecturaIA',
-      'La conexión con el backend se configurará en el siguiente paso.',
+      'Inicio de sesión correcto.',
+      snackPosition: SnackPosition.BOTTOM,
+    );
+  } else {
+    Get.snackbar(
+      'Error',
+      _auth.mensajeError.value,
       snackPosition: SnackPosition.BOTTOM,
     );
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -95,10 +115,24 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                   ),
                   const SizedBox(height: 24),
-                  FilledButton(
-                    onPressed: _iniciarSesion,
-                    child: const Text('Ingresar'),
-                  ),
+
+Obx(
+  () => FilledButton(
+    onPressed: _auth.cargando.value ? null : _iniciarSesion,
+    child: _auth.cargando.value
+        ? const SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+            ),
+          )
+        : const Text('Ingresar'),
+  ),
+),
+
+
+
                 ],
               ),
             ),
