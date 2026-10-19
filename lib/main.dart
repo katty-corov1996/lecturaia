@@ -7,12 +7,18 @@ import 'screens/login_screen.dart';
 import 'theme/app_theme.dart';
 import 'controllers/libros_controller.dart';
 import 'screens/libros_screen.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'controllers/favoritos_controller.dart';
+import 'screens/favoritos_screen.dart';
 
 
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
 
-void main() {
   Get.put(AuthController());
-Get.put(LibrosController());
+  Get.put(LibrosController());
+Get.put(FavoritosController());
 
   runApp(const LecturaIaApp());
 }
@@ -45,6 +51,10 @@ GetPage(
 ),
 
 
+GetPage(
+  name: '/favoritos',
+  page: () => const FavoritosScreen(),
+),
       ],
       home: Obx(
         () {

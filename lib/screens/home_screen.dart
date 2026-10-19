@@ -69,7 +69,17 @@ FilledButton.icon(
   onPressed: () => Get.toNamed('/libros'),
   icon: const Icon(Icons.library_books),
   label: const Text('Ver biblioteca'),
-),                ],
+),
+
+const SizedBox(height: 12),
+OutlinedButton.icon(
+  onPressed: () => Get.toNamed('/favoritos'),
+  icon: const Icon(Icons.favorite),
+  label: const Text('Ver favoritos'),
+),
+
+
+                ],
               ),
             ),
           );

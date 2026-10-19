@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/libros_controller.dart';
+import '../controllers/favoritos_controller.dart';
+
 
 class LibrosScreen extends StatelessWidget {
   const LibrosScreen({super.key});
@@ -9,6 +11,8 @@ class LibrosScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<LibrosController>();
+
+final favoritos = Get.find<FavoritosController>();
 
     return Scaffold(
       appBar: AppBar(
@@ -83,6 +87,21 @@ class LibrosScreen extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
+
+
+trailing: Obx(
+  () => IconButton(
+    tooltip: favoritos.esFavorito(libro.id)
+        ? 'Quitar de favoritos'
+        : 'Agregar a favoritos',
+    onPressed: () => favoritos.alternarFavorito(libro.id),
+    icon: Icon(
+      favoritos.esFavorito(libro.id)
+          ? Icons.favorite
+          : Icons.favorite_border,
+    ),
+  ),
+),
                         subtitle: Padding(
                           padding: const EdgeInsets.only(top: 8),
                           child: Text(
