@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'screens/inicio_screen.dart';
+import 'controllers/auth_controller.dart';
+import 'screens/login_screen.dart';
 import 'theme/app_theme.dart';
 
 void main() {
+  Get.put(AuthController());
+
   runApp(const LecturaIaApp());
 }
 
@@ -17,7 +20,7 @@ class LecturaIaApp extends StatelessWidget {
       title: 'LecturaIA',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.temaClaro,
-      home: const InicioScreen(),
+      home: const LoginScreen(),
     );
   }
 }
