@@ -5,9 +5,14 @@ import 'controllers/auth_controller.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
 import 'theme/app_theme.dart';
+import 'controllers/libros_controller.dart';
+import 'screens/libros_screen.dart';
+
+
 
 void main() {
   Get.put(AuthController());
+Get.put(LibrosController());
 
   runApp(const LecturaIaApp());
 }
@@ -33,6 +38,13 @@ class LecturaIaApp extends StatelessWidget {
           name: '/home',
           page: () => const HomeScreen(),
         ),
+
+GetPage(
+  name: '/libros',
+  page: () => const LibrosScreen(),
+),
+
+
       ],
       home: Obx(
         () {

@@ -63,7 +63,13 @@ class HomeScreen extends StatelessWidget {
                     'Tu biblioteca inteligente está lista para comenzar.',
                     textAlign: TextAlign.center,
                   ),
-                ],
+
+const SizedBox(height: 24),
+FilledButton.icon(
+  onPressed: () => Get.toNamed('/libros'),
+  icon: const Icon(Icons.library_books),
+  label: const Text('Ver biblioteca'),
+),                ],
               ),
             ),
           );

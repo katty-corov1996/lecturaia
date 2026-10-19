@@ -24,3 +24,16 @@ class UsuarioRespuesta(BaseModel):
 class TokenRespuesta(BaseModel):
     access_token: str
     token_type: str = "bearer"
+
+
+
+class LibroRespuesta(BaseModel):
+    id: int
+    titulo: str
+    autor: str
+    genero: str
+    descripcion: str
+    anio: int
+
+    class Config:
+        from_attributes = True

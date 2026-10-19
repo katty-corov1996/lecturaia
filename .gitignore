@@ -50,3 +50,9 @@ app.*.map.json
 
 .env
 backend/.env
+
+
+backend/.venv/
+backend/lecturaia.db
+__pycache__/
+*.pyc
