@@ -4,13 +4,33 @@ import 'package:get/get.dart';
 import '../controllers/libros_controller.dart';
 import '../controllers/resenas_controller.dart';
 
-class ResenasScreen extends StatelessWidget {
+
+
+class ResenasScreen extends StatefulWidget {
   const ResenasScreen({super.key});
 
   @override
+  State<ResenasScreen> createState() => _ResenasScreenState();
+}
+
+class _ResenasScreenState extends State<ResenasScreen> {
+  late final ResenasController resenasController;
+  late final LibrosController librosController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    resenasController = Get.find<ResenasController>();
+    librosController = Get.find<LibrosController>();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      resenasController.cargarResenas();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final resenasController = Get.find<ResenasController>();
-    final librosController = Get.find<LibrosController>();
 
     return Scaffold(
       appBar: AppBar(

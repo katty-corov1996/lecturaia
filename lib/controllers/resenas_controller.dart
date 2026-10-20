@@ -19,12 +19,6 @@ class ResenasController extends GetxController {
   final RxString mensajeError = ''.obs;
   final RxBool guardando = false.obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-    cargarResenas();
-  }
-
   Future<void> cargarResenas() async {
     estado.value = EstadoResenas.cargando;
     mensajeError.value = '';
