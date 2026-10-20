@@ -442,10 +442,8 @@ async def recomendar_lectura(
         f"Preferencias del usuario: {gustos}"
     )
 
-    url = (
-        "https://generativelanguage.googleapis.com/"
-f"v1beta/models/gemini-3.8-flash:generateContent?key={api_key}"
-    )
+
+    url = "https://" + "generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent"
 
     payload = {
         "contents": [
@@ -460,21 +458,22 @@ f"v1beta/models/gemini-3.8-flash:generateContent?key={api_key}"
     }
 
     try:
+        timeout = httpx.Timeout(
+            connect=10.0,
+            read=60.0,
+            write=10.0,
+            pool=10.0,
+        )
 
-        async with httpx.AsyncClient(timeout=30.0) as client:
-            response = None
-
-            for intento in range(3):
-                response = await client.post(
-                    url,
-                    json=payload,
-                )
-
-                if response.status_code != 503:
-                    break
-
-                if intento < 2:
-                    await asyncio.sleep(2)
+        async with httpx.AsyncClient(timeout=timeout) as client:
+            response = await client.post(
+                url,
+                headers={
+                    "x-goog-api-key": api_key,
+                    "Content-Type": "application/json",
+                },
+                json=payload,
+            )
 
         if response.status_code == 503:
             raise HTTPException(
@@ -513,7 +512,16 @@ f"v1beta/models/gemini-3.8-flash:generateContent?key={api_key}"
             "recomendacion": texto,
         }
 
-    except httpx.RequestError:
+    
+
+
+    except httpx.RequestError as e:
+        print(
+            "ERROR HTTPX IA:",
+            type(e).__name__,
+            str(e),
+        )
+
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="No se pudo conectar con el servicio de IA.",

@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 
 import '../services/ia_service.dart';
-import 'package:flutter/foundation.dart';
 
 class IaController extends GetxController {
   final IaService _service = IaService();
@@ -33,13 +32,6 @@ class IaController extends GetxController {
 
       recomendacion.value = resultado;
     } on DioException catch (e) {
-      debugPrint(
-        'IA ERROR: tipo=${e.type}, '
-        'mensaje=${e.message}, '
-        'url=${e.requestOptions.uri}, '
-        'status=${e.response?.statusCode}, '
-        'data=${e.response?.data}',
-      );
 
 
       if (e.response?.statusCode == 400) {
